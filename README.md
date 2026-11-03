@@ -42,7 +42,7 @@ Providers sit behind one `complete()` interface:
 | Provider | When it is used | Default model |
 | --- | --- | --- |
 | `mock` | Default. Offline heuristics. CI and demos. | `mock-heuristic-v1` |
-| `groq` | `GROQ_API_KEY` set, or `provider: groq` | `llama-3.3-70b-versatile` |
+| `groq` | `GROQ_API_KEY` set, or `provider: groq` | `openai/gpt-oss-120b` |
 | `gemini` | `GEMINI_API_KEY` or `GOOGLE_API_KEY` | `gemini-2.5-flash` |
 | `ollama` | A local daemon | `llama3.2` |
 | `auto` | Groq if its key is set, else Gemini, else mock | the chosen provider's default |

@@ -1,0 +1,30 @@
+id: style_issues
+description: A new function is hard to read and leaves a TODO.
+diff: |
+  diff --git a/app/format.py b/app/format.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/format.py
+  @@ -0,0 +1,4 @@
+  +def format_row(a, b, c, d, e, f, g):
+  +    label = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  +    # TODO: collapse these branches before the next release
+  +    return label
+labels:
+  - file: app/format.py
+    line: 1
+    category: maintainability
+    contains: "def format_row"
+  - file: app/format.py
+    line: 2
+    category: maintainability
+    contains: "label ="
+  - file: app/format.py
+    line: 3
+    category: maintainability
+    contains: "TODO"
+  - file: app/format.py
+    line: 1
+    category: tests
+    contains: "def format_row"

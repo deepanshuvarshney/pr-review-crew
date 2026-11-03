@@ -1,0 +1,22 @@
+id: missing_authz
+description: A privileged delete route has no auth check.
+diff: |
+  diff --git a/app/admin.py b/app/admin.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/admin.py
+  @@ -0,0 +1,4 @@
+  +@app.delete("/admin/users/<int:uid>")
+  +def delete_user(uid):
+  +    db.delete_user(uid)
+  +    return {"ok": True}
+labels:
+  - file: app/admin.py
+    line: 1
+    category: security
+    contains: "@app.delete"
+  - file: app/admin.py
+    line: 2
+    category: tests
+    contains: "def delete_user"

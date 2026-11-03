@@ -1,0 +1,21 @@
+id: none_deref
+description: A lookup result is used without a None check.
+diff: |
+  diff --git a/app/view.py b/app/view.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/view.py
+  @@ -0,0 +1,3 @@
+  +def display(uid):
+  +    user = get_user(uid)
+  +    return user.name
+labels:
+  - file: app/view.py
+    line: 3
+    category: correctness
+    contains: "user.name"
+  - file: app/view.py
+    line: 1
+    category: tests
+    contains: "def display"

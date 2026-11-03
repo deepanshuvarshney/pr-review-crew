@@ -1,0 +1,26 @@
+id: race_condition
+description: Threads increment a shared counter without a lock.
+diff: |
+  diff --git a/app/workers.py b/app/workers.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/workers.py
+  @@ -0,0 +1,8 @@
+  +import threading
+  +
+  +def start_workers(counter):
+  +    def bump():
+  +        counter["n"] += 1
+  +    threads = [threading.Thread(target=bump) for _ in range(4)]
+  +    for thread in threads:
+  +        thread.start()
+labels:
+  - file: app/workers.py
+    line: 5
+    category: correctness
+    contains: "+="
+  - file: app/workers.py
+    line: 3
+    category: tests
+    contains: "def start_workers"

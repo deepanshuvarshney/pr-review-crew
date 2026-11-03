@@ -1,0 +1,24 @@
+id: subtle_boundary
+description: An inclusive end disagrees with an exclusive window. The mock heuristics miss it.
+diff: |
+  diff --git a/app/window.py b/app/window.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/window.py
+  @@ -0,0 +1,2 @@
+  +def in_window(ts, start, end):
+  +    return start <= ts <= end
+  diff --git a/tests/test_window.py b/tests/test_window.py
+  new file mode 100644
+  index 0000000..2222222
+  --- /dev/null
+  +++ b/tests/test_window.py
+  @@ -0,0 +1,2 @@
+  +def test_in_window_includes_start():
+  +    assert in_window(1, 1, 2)
+labels:
+  - file: app/window.py
+    line: 2
+    category: correctness
+    contains: "return start"

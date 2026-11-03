@@ -1,0 +1,52 @@
+# PR Review Crew configuration.
+# Lockfiles, binaries, and generated files are always skipped, in addition to ignore_paths.
+
+enabled: true
+provider: mock
+model:
+agents:
+  security: true
+  correctness: true
+  performance: true
+  tests: true
+  maintainability: true
+severity_threshold: low
+confidence_threshold: 0.45
+max_comments: 12
+max_diff_tokens: 8000
+ignore_paths:
+  - "*.lock"
+  - "package-lock.json"
+  - "yarn.lock"
+  - "pnpm-lock.yaml"
+  - "poetry.lock"
+  - "Cargo.lock"
+  - "Gemfile.lock"
+  - "composer.lock"
+  - "go.sum"
+  - "Pipfile.lock"
+  - "uv.lock"
+  - "*.min.js"
+  - "*.min.css"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/vendor/**"
+  - "**/node_modules/**"
+  - "**/generated/**"
+  - "**/*_generated.*"
+  - "**/*.generated.*"
+  - "**/*.pb.go"
+  - "**/*.pb.py"
+llm_timeout_seconds: 45
+github_timeout_seconds: 30
+agent_timeout_seconds: 120
+static_timeout_seconds: 30
+max_attempts: 4
+static_analysis: true
+static_tools:
+  - ruff
+  - bandit
+  - semgrep
+cache_enabled: true
+cache_dir: .prcrew/cache
+ollama_base_url: http://127.0.0.1:11434

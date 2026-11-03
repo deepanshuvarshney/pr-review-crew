@@ -1,0 +1,23 @@
+id: string_concat_loop
+description: A string is copied on every loop pass.
+diff: |
+  diff --git a/app/build.py b/app/build.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/build.py
+  @@ -0,0 +1,5 @@
+  +def build(parts):
+  +    out = ""
+  +    for part in parts:
+  +        out += part + ","
+  +    return out
+labels:
+  - file: app/build.py
+    line: 4
+    category: performance
+    contains: "+="
+  - file: app/build.py
+    line: 1
+    category: tests
+    contains: "def build"

@@ -1,0 +1,21 @@
+id: safe_query
+description: Parameterized SQL plus a test. Nothing to flag.
+diff: |
+  diff --git a/app/db.py b/app/db.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/db.py
+  @@ -0,0 +1,3 @@
+  +def get_user(name):
+  +    cur.execute("SELECT * FROM users WHERE name = %s", (name,))
+  +    return cur.fetchone()
+  diff --git a/tests/test_db.py b/tests/test_db.py
+  new file mode 100644
+  index 0000000..2222222
+  --- /dev/null
+  +++ b/tests/test_db.py
+  @@ -0,0 +1,2 @@
+  +def test_get_user():
+  +    assert get_user("ada") is None
+labels: []

@@ -1,0 +1,86 @@
+name: "PR Review Crew"
+description: "Multi-agent pull request review. Uses a free-tier model when a key is configured, otherwise a deterministic offline mock."
+branding:
+  icon: eye
+  color: blue
+inputs:
+  github-token:
+    description: "Token with pull request write access. The default GITHUB_TOKEN can comment and request changes."
+    required: true
+  provider:
+    description: "auto, mock, groq, gemini, or ollama. auto selects Groq, then Gemini, then mock based on which key is set."
+    required: false
+    default: "auto"
+  model:
+    description: "Optional model override for the selected provider."
+    required: false
+    default: ""
+  config-path:
+    description: "Path to .prcrew.yml. A missing file falls back to defaults."
+    required: false
+    default: ".prcrew.yml"
+  dry-run:
+    description: "true prints the review and does not post it."
+    required: false
+    default: "false"
+  groq-api-key:
+    description: "Groq API key. Leave empty to stay on the mock provider when provider is auto."
+    required: false
+    default: ""
+  gemini-api-key:
+    description: "Gemini API key."
+    required: false
+    default: ""
+  severity-threshold:
+    description: "Optional severity floor: info, low, medium, high, or critical."
+    required: false
+    default: ""
+  pull-number:
+    description: "Pull request number. Defaults to the pull_request event that triggered the workflow."
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: Install PR Review Crew
+      shell: bash
+      run: python -m pip install "${{ github.action_path }}"
+    - name: Review pull request
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GROQ_API_KEY: ${{ inputs.groq-api-key }}
+        GEMINI_API_KEY: ${{ inputs.gemini-api-key }}
+        INPUT_PROVIDER: ${{ inputs.provider }}
+        INPUT_MODEL: ${{ inputs.model }}
+        INPUT_CONFIG: ${{ inputs.config-path }}
+        INPUT_DRY_RUN: ${{ inputs.dry-run }}
+        INPUT_SEVERITY: ${{ inputs.severity-threshold }}
+        INPUT_PULL_NUMBER: ${{ inputs.pull-number }}
+        EVENT_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+        number="${INPUT_PULL_NUMBER:-${EVENT_NUMBER:-}}"
+        if [ -z "${number}" ]; then
+          echo "PR Review Crew needs a pull_request event or the pull-number input." >&2
+          exit 1
+        fi
+        args=(review "${REPO}#${number}" --provider "${INPUT_PROVIDER}")
+        if [ -n "${INPUT_CONFIG}" ]; then
+          args+=(--config "${INPUT_CONFIG}")
+        fi
+        if [ -n "${INPUT_MODEL}" ]; then
+          args+=(--model "${INPUT_MODEL}")
+        fi
+        if [ -n "${INPUT_SEVERITY}" ]; then
+          args+=(--severity "${INPUT_SEVERITY}")
+        fi
+        if [ "${INPUT_DRY_RUN}" = "true" ]; then
+          args+=(--dry-run)
+        fi
+        python -m prcrew "${args[@]}"

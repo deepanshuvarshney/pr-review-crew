@@ -1,0 +1,24 @@
+id: n_plus_one
+description: Each loop iteration issues its own query.
+diff: |
+  diff --git a/app/orders.py b/app/orders.py
+  new file mode 100644
+  index 0000000..1111111
+  --- /dev/null
+  +++ b/app/orders.py
+  @@ -0,0 +1,6 @@
+  +def load_orders(user_ids):
+  +    orders = []
+  +    for uid in user_ids:
+  +        row = db.query(Order).filter(Order.user_id == uid).one()
+  +        orders.append(row)
+  +    return orders
+labels:
+  - file: app/orders.py
+    line: 4
+    category: performance
+    contains: "db.query"
+  - file: app/orders.py
+    line: 1
+    category: tests
+    contains: "def load_orders"
